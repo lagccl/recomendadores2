@@ -1,0 +1,16 @@
+group 'cl.uc.psanabria.sysrec'
+version '0.1'
+
+apply plugin: 'application'
+
+sourceCompatibility = "1.8"
+mainClassName = "cl.uc.psanabria.sysrec.work1.Main"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile 'junit:junit:4.11'
+    compile 'org.grouplens.lenskit:lenskit-all:2.2.1'
+}
