@@ -5,6 +5,8 @@ import cl.uc.psanabria.sysrec.work1.data.RatingListFactory;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
@@ -14,5 +16,11 @@ public class Main {
         System.out.printf("Rating Count: %d\n", ratingList.size());
         System.out.printf("Users count: %d\n", ratingList.usersCount());
         System.out.printf("Items count: %d\n", ratingList.itemsCount());
+
+        List<Integer> users = new LinkedList<>(ratingList.getUserList());
+
+        for(int user : users) {
+            System.out.printf("User #%d, Average: %.2f\n", user, ratingList.getUserScoreAverage(user));
+        }
     }
 }

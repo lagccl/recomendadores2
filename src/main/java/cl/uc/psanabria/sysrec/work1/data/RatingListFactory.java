@@ -1,6 +1,5 @@
 package cl.uc.psanabria.sysrec.work1.data;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 public class RatingListFactory {

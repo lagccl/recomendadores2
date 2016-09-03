@@ -4,6 +4,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.Collection;
+
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -214,5 +217,39 @@ public class RatingListTest {
         assertEquals(1.0, ratingList.getItemScoreAverage(2), 0.01);
         assertEquals(2.0, ratingList.getUserScoreAverage(1), 0.01);
         assertEquals(5.0, ratingList.getUserScoreAverage(2), 0.01);
+    }
+
+    @Test
+    public void testGetItemList() {
+        RatingList ratingList = new RatingList();
+        Rating rating1 = new Rating(2, 1, 1.0f);
+        Rating rating2 = new Rating(1, 1, 3.0f);
+        Rating rating3 = new Rating(1, 2, 5.0f);
+
+        ratingList.addRating(rating1);
+        ratingList.addRating(rating2);
+        ratingList.addRating(rating3);
+
+        Collection<Integer> itemList = ratingList.getItemList();
+
+        assertEquals(2, itemList.size());
+        assertArrayEquals(new Integer[]{1, 2}, itemList.toArray(new Integer[itemList.size()]));
+    }
+
+    @Test
+    public void testGetUserList() {
+        RatingList ratingList = new RatingList();
+        Rating rating1 = new Rating(2, 1, 1.0f);
+        Rating rating2 = new Rating(1, 2, 5.0f);
+        Rating rating3 = new Rating(1, 1, 3.0f);
+
+        ratingList.addRating(rating1);
+        ratingList.addRating(rating2);
+        ratingList.addRating(rating3);
+
+        Collection<Integer> userList = ratingList.getUserList();
+
+        assertEquals(2, userList.size());
+        assertArrayEquals(new Integer[]{1, 2}, userList.toArray(new Integer[userList.size()]));
     }
 }

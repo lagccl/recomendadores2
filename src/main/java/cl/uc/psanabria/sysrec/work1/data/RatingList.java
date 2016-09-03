@@ -1,17 +1,14 @@
 package cl.uc.psanabria.sysrec.work1.data;
 
 
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 public class RatingList {
     private Map<Integer, Map<Integer, Float>> itemRatings;
     private int ratingsCount;
 
 
-    public RatingList() {
+    RatingList() {
         itemRatings = new TreeMap<>();
         ratingsCount = 0;
     }
@@ -106,5 +103,21 @@ public class RatingList {
             return 0.0f;
 
         return total / userCount;
+    }
+
+    public Collection<Integer> getItemList() {
+        return itemRatings.keySet();
+    }
+
+    public Collection<Integer> getUserList() {
+        Set<Integer> userList = new TreeSet<>();
+
+        for(int item : itemRatings.keySet()) {
+            Map<Integer, Float> userRatings = itemRatings.get(item);
+
+            userList.addAll(userRatings.keySet());
+        }
+
+        return userList;
     }
 }
