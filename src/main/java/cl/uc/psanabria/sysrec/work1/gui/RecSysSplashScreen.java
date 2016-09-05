@@ -50,4 +50,13 @@ public class RecSysSplashScreen {
 
         splash.close();
     }
+
+    public boolean isOpen() {
+        if (splash == null) {
+            logger.warn("Splash screen was never initialized, skipping");
+            return false;
+        }
+
+        return splash.isVisible();
+    }
 }

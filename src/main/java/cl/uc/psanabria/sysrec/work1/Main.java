@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -18,12 +19,13 @@ public class Main {
     public static void main(String[] args) {
         RecSysSplashScreen splashScreen = new RecSysSplashScreen();
         FileInputStream inputStream = null;
+        String dataFolderPath = System.getProperty("dataPath", "data");
 
         try {
             splashScreen.updateStatus("Reading Rating Training Set...");
             logger.info("Reading Ratings Training Set");
-
-            inputStream = new FileInputStream("data/rating/training_rating.csv");
+            logger.info("Setting data folder to: " + dataFolderPath);
+            inputStream = new FileInputStream(new File(dataFolderPath, "rating/training_rating.csv"));
             RatingList ratingList = RatingListFactory.createFrom(inputStream, true, 1, 0, 3);
 
             splashScreen.updateStatus("Generating rating data summary graphics...");
@@ -36,6 +38,8 @@ public class Main {
         } catch (IOException ex) {
             logger.error("I/O exception: " + ex.getMessage(), ex);
         } finally {
+            if (splashScreen.isOpen())
+                splashScreen.close();
             if (inputStream != null) {
                 try {
                     inputStream.close();
