@@ -1,0 +1,42 @@
+JFDML JFormDesigner: "5.2.4.0.321" Java: "1.8.0_112-release" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq l {space :p:19:p, par l {comp label1:::p::p, comp label2:::p::p}, space :::p, par t {comp txtAverage:::p:166:p, comp txtStandarDeviation:::p:166:p}, space u:::p, comp graphicsPanel:::::x, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, par l {seq {comp graphicsPanel:::::x, space :::p}, seq {par b {comp txtAverage::b:p::p, comp label1::b:p::p}, space :::p, par b {comp label2::b:p::p, comp txtStandarDeviation::b:p::p}, space :168:242:x}}}}"
+		} ) {
+			name: "this"
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "Average"
+				auxiliary() {
+					"JavaCodeGenerator.variableLocal": true
+				}
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "txtAverage"
+				"editable": false
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "Standard Deviaton"
+				auxiliary() {
+					"JavaCodeGenerator.variableLocal": true
+				}
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "txtStandarDeviation"
+				"editable": false
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+				name: "graphicsPanel"
+				"border": new javax.swing.border.LineBorder( sfield java.awt.Color black, 1, false )
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 510, 300 )
+		} )
+	}
+}

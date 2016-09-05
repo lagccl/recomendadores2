@@ -120,4 +120,30 @@ public class RatingList {
 
         return userList;
     }
+
+    public Collection<Rating> getRatingsFromItem(int item) {
+        List<Rating> ratings = new ArrayList<>();
+
+        if (itemRatings.containsKey(item)) {
+            Map<Integer, Float> userRatings = itemRatings.get(item);
+
+            for (int user : userRatings.keySet()) {
+                ratings.add(new Rating(item, user, userRatings.get(user)));
+            }
+        }
+
+        return ratings;
+    }
+
+    public Collection<Rating> getRatingsFromUser(int user) {
+        List<Rating> ratings = new ArrayList<>();
+
+        for (int item : itemRatings.keySet()) {
+            Map<Integer, Float> userRatings = itemRatings.get(item);
+
+            if (userRatings.containsKey(user))
+                ratings.add(new Rating(item, user, userRatings.get(user)));
+        }
+        return ratings;
+    }
 }

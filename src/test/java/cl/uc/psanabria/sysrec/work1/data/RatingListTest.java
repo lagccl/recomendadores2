@@ -252,4 +252,70 @@ public class RatingListTest {
         assertEquals(2, userList.size());
         assertArrayEquals(new Integer[]{1, 2}, userList.toArray(new Integer[userList.size()]));
     }
+
+    @Test
+    public void testGetRatingsFromNonExistentItem() {
+        RatingList ratingList = new RatingList();
+        Rating rating1 = new Rating(1, 1, 1.0f);
+        Rating rating2 = new Rating(1, 2, 5.0f);
+        Rating rating3 = new Rating(2, 1, 3.0f);
+
+        ratingList.addRating(rating1);
+        ratingList.addRating(rating2);
+        ratingList.addRating(rating3);
+
+        Collection<Rating> ratings = ratingList.getRatingsFromItem(3);
+
+        assertEquals(0, ratings.size());
+    }
+
+    @Test
+    public void testGetRatingsFromItem() {
+        RatingList ratingList = new RatingList();
+        Rating rating1 = new Rating(1, 1, 1.0f);
+        Rating rating2 = new Rating(1, 2, 5.0f);
+        Rating rating3 = new Rating(2, 1, 3.0f);
+
+        ratingList.addRating(rating1);
+        ratingList.addRating(rating2);
+        ratingList.addRating(rating3);
+
+        Collection<Rating> ratings = ratingList.getRatingsFromItem(1);
+
+        assertEquals(2, ratings.size());
+        assertArrayEquals(new Rating[] {rating1, rating2}, ratings.toArray());
+    }
+
+    @Test
+    public void testGetRatingsFromNonExistentUser() {
+        RatingList ratingList = new RatingList();
+        Rating rating1 = new Rating(1, 1, 1.0f);
+        Rating rating2 = new Rating(1, 2, 5.0f);
+        Rating rating3 = new Rating(2, 1, 3.0f);
+
+        ratingList.addRating(rating1);
+        ratingList.addRating(rating2);
+        ratingList.addRating(rating3);
+
+        Collection<Rating> ratings = ratingList.getRatingsFromUser(3);
+
+        assertEquals(0, ratings.size());
+    }
+
+    @Test
+    public void testGetRatingsFromUser() {
+        RatingList ratingList = new RatingList();
+        Rating rating1 = new Rating(1, 1, 1.0f);
+        Rating rating2 = new Rating(1, 2, 5.0f);
+        Rating rating3 = new Rating(2, 1, 3.0f);
+
+        ratingList.addRating(rating1);
+        ratingList.addRating(rating2);
+        ratingList.addRating(rating3);
+
+        Collection<Rating> ratings = ratingList.getRatingsFromUser(1);
+
+        assertEquals(2, ratings.size());
+        assertArrayEquals(new Rating[] {rating1, rating3}, ratings.toArray());
+    }
 }

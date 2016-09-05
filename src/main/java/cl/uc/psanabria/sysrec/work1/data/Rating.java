@@ -39,4 +39,23 @@ public class Rating {
     public void setScore(float score) {
         this.score = score;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Rating))
+            return false;
+
+        Rating other = (Rating)obj;
+
+        return item == other.item && user == other.user && Math.abs(score - other.score) < 0.001;
+    }
+
+    @Override
+    public String toString() {
+        return "Rating{" +
+                "user=" + user +
+                ", item=" + item +
+                ", score=" + score +
+                '}';
+    }
 }

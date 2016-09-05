@@ -42,6 +42,7 @@ public class RatingListFactory {
 
             ratingList.addRating(rating);
         }
+
         return ratingList;
     }
 }

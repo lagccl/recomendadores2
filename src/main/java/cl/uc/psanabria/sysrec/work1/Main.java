@@ -2,25 +2,47 @@ package cl.uc.psanabria.sysrec.work1;
 
 import cl.uc.psanabria.sysrec.work1.data.RatingList;
 import cl.uc.psanabria.sysrec.work1.data.RatingListFactory;
+import cl.uc.psanabria.sysrec.work1.gui.RecSysSplashScreen;
+import cl.uc.psanabria.sysrec.work1.gui.ResultsFrame;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.LinkedList;
-import java.util.List;
+import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) throws FileNotFoundException {
-        FileInputStream inputStream = new FileInputStream("data/u.data");
-        RatingList ratingList = RatingListFactory.createFrom(inputStream, false, "\t", 1, 0, 2);
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
-        System.out.printf("Rating Count: %d\n", ratingList.size());
-        System.out.printf("Users count: %d\n", ratingList.usersCount());
-        System.out.printf("Items count: %d\n", ratingList.itemsCount());
+    public static void main(String[] args) {
+        RecSysSplashScreen splashScreen = new RecSysSplashScreen();
+        FileInputStream inputStream = null;
 
-        List<Integer> users = new LinkedList<>(ratingList.getUserList());
+        try {
+            splashScreen.updateStatus("Reading Rating Training Set...");
+            logger.info("Reading Ratings Training Set");
 
-        for(int user : users) {
-            System.out.printf("User #%d, Average: %.2f\n", user, ratingList.getUserScoreAverage(user));
+            inputStream = new FileInputStream("data/rating/training_rating.csv");
+            RatingList ratingList = RatingListFactory.createFrom(inputStream, true, 1, 0, 3);
+
+            splashScreen.updateStatus("Generating rating data summary graphics...");
+            logger.info("Generating Item/Score Average");
+            ResultsFrame frame = new ResultsFrame(ratingList);
+            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+            splashScreen.close();
+            frame.setVisible(true);
+        } catch (IOException ex) {
+            logger.error("I/O exception: " + ex.getMessage(), ex);
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    logger.error(e.getMessage(), e);
+                }
+            }
         }
     }
 }
