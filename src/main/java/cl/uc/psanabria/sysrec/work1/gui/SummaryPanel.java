@@ -1,16 +1,42 @@
 package cl.uc.psanabria.sysrec.work1.gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import cl.uc.psanabria.sysrec.work1.data.Rating;
 import cl.uc.psanabria.sysrec.work1.data.RatingList;
 
 import javax.swing.*;
 import java.awt.*;
 
 class SummaryPanel extends JPanel {
+    private RatingList ratingList;
+
     SummaryPanel(RatingList ratingList) {
         initComponents();
+        this.ratingList = ratingList;
         txtTotalItems.setText(Integer.toString(ratingList.itemsCount()));
         txtTotalUsers.setText(Integer.toString(ratingList.usersCount()));
         txtTotalRankings.setText(Integer.toString(ratingList.size()));
+    }
+
+    private void calculateButtonActionPerformed() {
+        if (!txtItem.getText().matches("[0-9]+")) {
+            JOptionPane.showMessageDialog(this, "Item to test must be a number", "Alert", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        boolean isForUser = true;
+        int element = Integer.parseInt(txtItem.getText());
+
+        if (radioItemOption.isSelected())
+            isForUser = false;
+
+        if (isForUser) {
+            txtAverage.setText(Double.toString(ratingList.getUserScoreAverage(element)));
+        } else {
+            txtAverage.setText(Double.toString(ratingList.getItemScoreAverage(element)));
+        }
     }
 
     private void initComponents() {
@@ -23,6 +49,13 @@ class SummaryPanel extends JPanel {
         txtTotalUsers = new JTextField();
         JLabel label3 = new JLabel();
         txtTotalRankings = new JTextField();
+        JLabel label5 = new JLabel();
+        txtItem = new JTextField();
+        radioOptionUser = new JRadioButton();
+        radioItemOption = new JRadioButton();
+        calculateButton = new JButton();
+        JLabel label6 = new JLabel();
+        txtAverage = new JTextField();
 
         //======== this ========
         setLayout(new GridBagLayout());
@@ -68,14 +101,67 @@ class SummaryPanel extends JPanel {
         label3.setFont(new Font("Dialog", Font.BOLD, 14));
         add(label3, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets(0, 0, 0, 5), 0, 0));
+            new Insets(0, 0, 5, 5), 0, 0));
 
         //---- txtTotalRankings ----
         txtTotalRankings.setColumns(15);
         txtTotalRankings.setEditable(false);
         add(txtTotalRankings, new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets(0, 0, 5, 0), 0, 0));
+
+        //---- label5 ----
+        label5.setText("Average rating for:");
+        label5.setFont(new Font("Dialog", Font.BOLD, 14));
+        add(label5, new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets(0, 0, 5, 5), 0, 0));
+        add(txtItem, new GridBagConstraints(1, 4, 1, 1, 0.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets(0, 0, 5, 0), 0, 0));
+
+        //---- radioOptionUser ----
+        radioOptionUser.setText("User");
+        radioOptionUser.setSelected(true);
+        add(radioOptionUser, new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets(0, 0, 5, 5), 0, 0));
+
+        //---- radioItemOption ----
+        radioItemOption.setText("Item");
+        add(radioItemOption, new GridBagConstraints(0, 6, 1, 1, 0.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets(0, 0, 5, 5), 0, 0));
+
+        //---- calculateButton ----
+        calculateButton.setText("Calculate");
+        calculateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                calculateButtonActionPerformed();
+            }
+        });
+        add(calculateButton, new GridBagConstraints(1, 6, 1, 1, 0.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets(0, 0, 5, 0), 0, 0));
+
+        //---- label6 ----
+        label6.setText("Result:");
+        label6.setFont(new Font("Dialog", Font.BOLD, 14));
+        add(label6, new GridBagConstraints(0, 7, 1, 1, 0.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets(0, 0, 0, 5), 0, 0));
+
+        //---- txtAverage ----
+        txtAverage.setEditable(false);
+        add(txtAverage, new GridBagConstraints(1, 7, 1, 1, 0.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
             new Insets(0, 0, 0, 0), 0, 0));
+
+        //---- btnGroupAverage ----
+        ButtonGroup btnGroupAverage = new ButtonGroup();
+        btnGroupAverage.add(radioOptionUser);
+        btnGroupAverage.add(radioItemOption);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
@@ -84,5 +170,10 @@ class SummaryPanel extends JPanel {
     private JTextField txtTotalItems;
     private JTextField txtTotalUsers;
     private JTextField txtTotalRankings;
+    private JTextField txtItem;
+    private JRadioButton radioOptionUser;
+    private JRadioButton radioItemOption;
+    private JButton calculateButton;
+    private JTextField txtAverage;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }
