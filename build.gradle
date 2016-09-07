@@ -4,7 +4,6 @@ version '0.1'
 apply plugin: 'application'
 
 sourceCompatibility = "1.7"
-targetCompatibility = "1.7"
 mainClassName = "cl.uc.psanabria.sysrec.work1.Main"
 applicationDefaultJvmArgs = ['-splash:images/splash.gif',
                             '-DdataPath=data']
