@@ -7,10 +7,6 @@ import cl.uc.psanabria.sysrec.work1.gui.ResultsFrame;
 import cl.uc.psanabria.sysrec.work1.recommender.AlgorithmConfiguratorFactory;
 import cl.uc.psanabria.sysrec.work1.recommender.ConfigurationType;
 import cl.uc.psanabria.sysrec.work1.recommender.SimilarityType;
-import org.grouplens.lenskit.RecommenderBuildException;
-import org.grouplens.lenskit.core.LenskitConfiguration;
-import org.grouplens.lenskit.core.LenskitRecommender;
-import org.grouplens.lenskit.data.dao.EventDAO;
 import org.grouplens.lenskit.data.source.CSVDataSourceBuilder;
 import org.grouplens.lenskit.data.text.DelimitedColumnEventFormat;
 import org.grouplens.lenskit.data.text.Fields;
@@ -31,7 +27,7 @@ public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
     public static final String TRAINING_RATING_FILE = "rating/training_rating.csv";
 
-    public static void main(String[] args) throws TaskExecutionException, RecommenderBuildException {
+    public static void main(String[] args) throws TaskExecutionException {
         RecSysSplashScreen splashScreen = new RecSysSplashScreen();
         String dataFolderPath = System.getProperty("dataPath", "data");
 
@@ -62,15 +58,24 @@ public class Main {
         evaluator.addAlgorithm(new AlgorithmInstance("UserKNN-Pearson", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User, SimilarityType.Pearson)));
         evaluator.addAlgorithm(new AlgorithmInstance("UserKNN-Spearman", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User, SimilarityType.Spearman)));
 
+        evaluator.addAlgorithm(new AlgorithmInstance("ItemKNN", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item)));
+        evaluator.addAlgorithm(new AlgorithmInstance("ItemKNN-5", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item, 5)));
+        evaluator.addAlgorithm(new AlgorithmInstance("ItemKNN-10", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item, 10)));
+        evaluator.addAlgorithm(new AlgorithmInstance("ItemKNN-15", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item, 15)));
+        evaluator.addAlgorithm(new AlgorithmInstance("ItemKNN-0.9 TSim", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item, 0.9)));
+        evaluator.addAlgorithm(new AlgorithmInstance("ItemKNN-0.8 TSim", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item, 0.8)));
+        evaluator.addAlgorithm(new AlgorithmInstance("ItemKNN-0.7 TSim", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item, 0.7)));
+        evaluator.addAlgorithm(new AlgorithmInstance("ItemKNN-0.7 TSim", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item, 0.6)));
+        evaluator.addAlgorithm(new AlgorithmInstance("ItemKNN-0.7 TSim", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item, 0.5)));
+        evaluator.addAlgorithm(new AlgorithmInstance("ItemKNN-Cosine", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item, SimilarityType.Cosine)));
+        evaluator.addAlgorithm(new AlgorithmInstance("ItemKNN-Pearson", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item, SimilarityType.Pearson)));
+        evaluator.addAlgorithm(new AlgorithmInstance("ItemKNN-Spearman", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item, SimilarityType.Spearman)));
+
+
         evaluator.addMetric(RMSEPredictMetric.class);
         evaluator.setOutput(new File("results.csv"));
 
         evaluator.call();
-        //LenskitConfiguration configuration = AlgorithmInstance("UserKNN-0.7 TSim", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User, 0.5);
-
-        //configuration.bind(EventDAO.class, new )
-        //LenskitRecommender recommender = LenskitRecommender.build();
-
       //  startResultFrame(splashScreen, dataFolderPath);
     }
 

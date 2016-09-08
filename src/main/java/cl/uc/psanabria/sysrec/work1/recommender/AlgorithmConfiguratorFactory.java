@@ -7,6 +7,7 @@ import org.grouplens.lenskit.core.LenskitConfiguration;
 import org.grouplens.lenskit.knn.NeighborhoodSize;
 import org.grouplens.lenskit.knn.item.ItemItemScorer;
 import org.grouplens.lenskit.knn.item.ItemVectorSimilarity;
+import org.grouplens.lenskit.knn.item.ModelSize;
 import org.grouplens.lenskit.knn.item.model.ItemItemModel;
 import org.grouplens.lenskit.knn.item.model.ItemItemModelBuilder;
 import org.grouplens.lenskit.knn.user.UserSimilarityThreshold;
@@ -106,8 +107,28 @@ public class AlgorithmConfiguratorFactory {
             configuration.set(NeighborhoodSize.class).to(neighbours);
         }
 
+        if (!(Math.abs(threshold - 0.0) < 0.01)) {
+            configuration.set(ThresholdValue.class).to(threshold);
+        }
 
-
+        if (similarityType != SimilarityType.Default) {
+            switch (similarityType) {
+                case Cosine:
+                    configuration.within(ItemVectorSimilarity.class)
+                            .bind(VectorSimilarity.class).to(CosineVectorSimilarity.class);
+                    break;
+                case Pearson:
+                    configuration.within(ItemVectorSimilarity.class)
+                            .bind(VectorSimilarity.class).to(PearsonCorrelation.class);
+                    break;
+                case Spearman:
+                    configuration.within(ItemVectorSimilarity.class)
+                            .bind(VectorSimilarity.class).to(SpearmanRankCorrelation.class);
+                    break;
+                default:
+                    throw new InvalidCorrelationException(similarityType);
+            }
+        }
 
         return configuration;
     }
