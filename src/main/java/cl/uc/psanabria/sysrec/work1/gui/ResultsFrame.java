@@ -1,10 +1,9 @@
 package cl.uc.psanabria.sysrec.work1.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
 import cl.uc.psanabria.sysrec.work1.data.RatingList;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class ResultsFrame extends JFrame {
 

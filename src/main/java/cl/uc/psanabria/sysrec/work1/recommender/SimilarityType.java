@@ -8,5 +8,6 @@ public enum  SimilarityType {
     Cosine,
     DistanceVector,
     Pearson,
-    Spearman
+    Spearman,
+    WeightedSlope
 }

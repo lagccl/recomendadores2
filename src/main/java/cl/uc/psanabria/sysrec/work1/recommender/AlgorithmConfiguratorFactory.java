@@ -13,6 +13,8 @@ import org.grouplens.lenskit.knn.item.model.ItemItemModelBuilder;
 import org.grouplens.lenskit.knn.user.UserSimilarityThreshold;
 import org.grouplens.lenskit.knn.user.UserUserItemScorer;
 import org.grouplens.lenskit.knn.user.UserVectorSimilarity;
+import org.grouplens.lenskit.slopeone.SlopeOneItemScorer;
+import org.grouplens.lenskit.slopeone.WeightedSlopeOneItemScorer;
 import org.grouplens.lenskit.transform.normalize.MeanCenteringVectorNormalizer;
 import org.grouplens.lenskit.transform.normalize.UserVectorNormalizer;
 import org.grouplens.lenskit.transform.normalize.VectorNormalizer;
@@ -31,6 +33,7 @@ public class AlgorithmConfiguratorFactory {
             case Item:
                 return getUserItemConfiguration(neighbours, threshold, similarityType);
             case SlopeOne:
+                return getSlopeOneConfiguration(similarityType);
             default:
                 throw new InvalidAlgorithmException(type);
         }
@@ -70,7 +73,7 @@ public class AlgorithmConfiguratorFactory {
         }
 
         if (!(Math.abs(threshold - 0.0) < 0.01)) {
-            configuration.set(ThresholdValue.class).to(threshold);
+            configuration.  set(ThresholdValue.class).to(threshold);
         }
 
         if (similarityType != SimilarityType.Default) {
@@ -129,6 +132,19 @@ public class AlgorithmConfiguratorFactory {
                     throw new InvalidCorrelationException(similarityType);
             }
         }
+
+        return configuration;
+    }
+
+    private static LenskitConfiguration getSlopeOneConfiguration(SimilarityType similarityType) {
+        LenskitConfiguration configuration = new LenskitConfiguration();
+
+        if (similarityType == SimilarityType.Default)
+            configuration.bind(ItemScorer.class).to(SlopeOneItemScorer.class);
+        else
+            configuration.bind(ItemScorer.class).to(WeightedSlopeOneItemScorer.class);
+
+        configuration.bind(BaselineScorer.class, ItemScorer.class).to(ItemMeanRatingItemScorer.class);
 
         return configuration;
     }
