@@ -4,16 +4,18 @@ import org.grouplens.lenskit.RatingPredictor;
 import org.grouplens.lenskit.RecommenderBuildException;
 import org.grouplens.lenskit.core.LenskitConfiguration;
 import org.grouplens.lenskit.core.LenskitRecommender;
-import org.grouplens.lenskit.data.text.DelimitedColumnEventFormat;
-import org.grouplens.lenskit.data.text.Formats;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 
 public class RecommendationPredictionsGenerator {
     private LenskitConfiguration configuration;
     private File inputFile, outputFile;
+    private static final Logger logger = LoggerFactory.getLogger(RecommendationPredictionsGenerator.class);
 
     public RecommendationPredictionsGenerator(LenskitConfiguration configuration, File inputFile, File outputFile) {
         this.configuration = configuration;
@@ -22,19 +24,24 @@ public class RecommendationPredictionsGenerator {
     }
 
     public void recommend() throws RecommenderBuildException, IOException {
-        DelimitedColumnEventFormat format = Formats.csvRatings();
+        logger.info("Creating recommender");
         LenskitRecommender recommender = LenskitRecommender.build(configuration);
         RatingPredictor predictor = recommender.getRatingPredictor();
-
+        PrintStream printStream = new PrintStream(outputFile);
+        printStream.printf("%s,%s,%s\n","item","user","rating");
         CSVReader reader = new CSVReader(new FileInputStream(inputFile));
         reader.next();
+
+        logger.info("Predicting recommendations");
         while (reader.hasNext()) {
             String line[] = reader.next();
             int item = Integer.parseInt(line[0]);
-            int styleID = Integer.parseInt(line[1]);
             int user = Integer.parseInt(line[2]);
             if (predictor != null)
-                System.out.printf("%d,%d,%d,%.6f\n", item, styleID, user, predictor.predict(user, item));
+                printStream.printf("%d,%d,%.6f\n", item, user, predictor.predict(user, item));
         }
+
+        printStream.close();
+        logger.info("Finished recomendation");
     }
 }

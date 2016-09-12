@@ -114,20 +114,14 @@ class RatingStatistics extends JPanel {
     }
 
     private void predictButtonActionPerformed() {
-        try {
-            LenskitConfiguration configuration = new LenskitConfiguration(algorithms.get(algorithmTypeComboBox.getSelectedItem().toString()));
-
-            DelimitedColumnEventFormat format = Formats.csvRatings();
-
-            format.setHeaderLines(1);
-            format.setFields(Fields.user(), Fields.item(), Fields.ignored(), Fields.rating());
-            configuration.bind(EventDAO.class).to(new TextEventDAO(ratingFile, format));
-
-            RecommendationPredictionsGenerator generator = new RecommendationPredictionsGenerator(configuration, inputFile, outputFile);
-            generator.recommend();
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-        }
+        trainingButton.setEnabled(false);
+        ratingDataFileTextField.setEnabled(false);
+        algorithmTypeComboBox.setEnabled(false);
+        outputFileTextBox.setEnabled(false);
+        predictButton.setEnabled(false);
+        predictButton.setText("Rating...");
+        RaterWorker worker = new RaterWorker();
+        worker.execute();
     }
 
     private void initComponents() {
@@ -274,46 +268,6 @@ class RatingStatistics extends JPanel {
     private JProgressBar trainingProgressBar;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
-    private class TrainerWorker extends SwingWorker<List<EvaluationResult>, Void> {
-        @Override
-        protected List<EvaluationResult> doInBackground() throws Exception {
-            List<EvaluationResult> resultList = new ArrayList<>();
-            logger.info("Beginning Training");
-            int index = 1;
-
-            for (String name : algorithms.keySet()) {
-                logger.info("Evaluating " + name);
-                Evaluator evaluator = new Evaluator(ratingFile, name, algorithms.get(name));
-
-                resultList.addAll(evaluator.runEvaluation());
-                logger.info("Finished evaluating " + name);
-                setProgress(index * 100 / algorithms.keySet().size());
-                ++index;
-            }
-
-            return resultList;
-        }
-
-        @Override
-        protected void done() {
-            try {
-                logger.info("Finished evaluation");
-                parentFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                trainingProgressBar.setValue(100);
-                trainingButton.setText("Start Training");
-                trainingButton.setEnabled(true);
-                ratingDataFileTextField.setEnabled(true);
-                algorithmTypeComboBox.setEnabled(true);
-                outputFileTextBox.setEnabled(true);
-                predictButton.setEnabled(true);
-
-                generateResultGraphics(get());
-            } catch (InterruptedException | ExecutionException e) {
-                logger.error(e.getMessage(), e);
-            }
-        }
-    }
-
     @SuppressWarnings("unchecked")
     private void generateResultGraphics(List<EvaluationResult> resultList) {
         DataTable dataRMSE = new DataTable(String.class, Double.class, Double.class);
@@ -416,5 +370,77 @@ class RatingStatistics extends JPanel {
         result.put("FunkSVD", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.SVD));
 
         return result;
+    }
+
+    private class TrainerWorker extends SwingWorker<List<EvaluationResult>, Void> {
+        @Override
+        protected List<EvaluationResult> doInBackground() throws Exception {
+            List<EvaluationResult> resultList = new ArrayList<>();
+            logger.info("Beginning Training");
+            int index = 1;
+
+            for (String name : algorithms.keySet()) {
+                logger.info("Evaluating " + name);
+                Evaluator evaluator = new Evaluator(ratingFile, name, algorithms.get(name));
+
+                resultList.addAll(evaluator.runEvaluation());
+                logger.info("Finished evaluating " + name);
+                setProgress(index * 100 / algorithms.keySet().size());
+                ++index;
+            }
+
+            return resultList;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                logger.info("Finished evaluation");
+                parentFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                trainingProgressBar.setValue(100);
+                trainingButton.setText("Start Training");
+                trainingButton.setEnabled(true);
+                ratingDataFileTextField.setEnabled(true);
+                algorithmTypeComboBox.setEnabled(true);
+                outputFileTextBox.setEnabled(true);
+                predictButton.setEnabled(true);
+
+                generateResultGraphics(get());
+            } catch (InterruptedException | ExecutionException e) {
+                logger.error(e.getMessage(), e);
+            }
+        }
+    }
+
+    private class RaterWorker extends SwingWorker<Void, Void> {
+        @Override
+        protected Void doInBackground() {
+            try {
+                LenskitConfiguration configuration = new LenskitConfiguration(algorithms.get(algorithmTypeComboBox.getSelectedItem().toString()));
+
+                DelimitedColumnEventFormat format = Formats.csvRatings();
+
+                format.setHeaderLines(1);
+                format.setFields(Fields.user(), Fields.item(), Fields.ignored(), Fields.rating());
+                configuration.bind(EventDAO.class).to(new TextEventDAO(ratingFile, format));
+
+                RecommendationPredictionsGenerator generator = new RecommendationPredictionsGenerator(configuration, inputFile, outputFile);
+                generator.recommend();
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            }
+            return null;
+        }
+
+        @Override
+        protected void done() {
+            trainingButton.setEnabled(true);
+            ratingDataFileTextField.setEnabled(true);
+            algorithmTypeComboBox.setEnabled(true);
+            outputFileTextBox.setEnabled(true);
+            predictButton.setEnabled(true);
+            predictButton.setText("Predict Ratings");
+            JOptionPane.showMessageDialog(RatingStatistics.this, "Prediction finished", "Information", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 }
