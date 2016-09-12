@@ -4,9 +4,6 @@ import cl.uc.psanabria.sysrec.work1.data.RatingList;
 import cl.uc.psanabria.sysrec.work1.data.RatingListFactory;
 import cl.uc.psanabria.sysrec.work1.gui.RecSysSplashScreen;
 import cl.uc.psanabria.sysrec.work1.gui.ResultsFrame;
-import cl.uc.psanabria.sysrec.work1.recommender.AlgorithmConfiguratorFactory;
-import cl.uc.psanabria.sysrec.work1.recommender.ConfigurationType;
-import cl.uc.psanabria.sysrec.work1.recommender.Evaluator;
 import org.grouplens.lenskit.eval.TaskExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +20,6 @@ public class Main {
     public static void main(String[] args) throws TaskExecutionException {
         RecSysSplashScreen splashScreen = new RecSysSplashScreen();
         String dataFolderPath = System.getProperty("dataPath", "data");
-        Evaluator evaluator = new Evaluator(new File(dataFolderPath, TRAINING_RATING_FILE),
-                "ItemKNN", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.SlopeOne));
         startResultFrame(splashScreen, dataFolderPath);
     }
 
@@ -35,12 +30,13 @@ public class Main {
             splashScreen.updateStatus("Reading Rating Training Set...");
             logger.info("Reading Ratings Training Set");
             logger.info("Setting data folder to: " + dataFolderPath);
-            inputStream = new FileInputStream(new File(dataFolderPath, TRAINING_RATING_FILE));
+            File ratingFile = new File(dataFolderPath, TRAINING_RATING_FILE);
+            inputStream = new FileInputStream(ratingFile);
             RatingList ratingList = RatingListFactory.createFrom(inputStream, true, 1, 0, 3);
 
             splashScreen.updateStatus("Generating rating data summary graphics...");
             logger.info("Generating Item/Score Average");
-            ResultsFrame frame = new ResultsFrame(ratingList);
+            ResultsFrame frame = new ResultsFrame(ratingList, ratingFile, dataFolderPath);
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
             splashScreen.close();

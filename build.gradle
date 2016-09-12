@@ -6,7 +6,8 @@ apply plugin: 'application'
 sourceCompatibility = "1.7"
 mainClassName = "cl.uc.psanabria.sysrec.work1.Main"
 applicationDefaultJvmArgs = ['-splash:images/splash.gif',
-                            '-DdataPath=data']
+                            '-DdataPath=data',
+                             '-Dswing.defaultlaf=javax.swing.plaf.nimbus.NimbusLookAndFeel']
 
 repositories {
     mavenCentral()

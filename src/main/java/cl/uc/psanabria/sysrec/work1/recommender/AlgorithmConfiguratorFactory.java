@@ -4,6 +4,7 @@ import org.grouplens.lenskit.ItemScorer;
 import org.grouplens.lenskit.baseline.BaselineScorer;
 import org.grouplens.lenskit.baseline.ItemMeanRatingItemScorer;
 import org.grouplens.lenskit.core.LenskitConfiguration;
+import org.grouplens.lenskit.iterative.IterationCount;
 import org.grouplens.lenskit.knn.NeighborhoodSize;
 import org.grouplens.lenskit.knn.item.ItemItemScorer;
 import org.grouplens.lenskit.knn.item.ItemVectorSimilarity;
@@ -13,6 +14,8 @@ import org.grouplens.lenskit.knn.item.model.ItemItemModelBuilder;
 import org.grouplens.lenskit.knn.user.UserSimilarityThreshold;
 import org.grouplens.lenskit.knn.user.UserUserItemScorer;
 import org.grouplens.lenskit.knn.user.UserVectorSimilarity;
+import org.grouplens.lenskit.mf.funksvd.FeatureCount;
+import org.grouplens.lenskit.mf.funksvd.FunkSVDItemScorer;
 import org.grouplens.lenskit.slopeone.SlopeOneItemScorer;
 import org.grouplens.lenskit.slopeone.WeightedSlopeOneItemScorer;
 import org.grouplens.lenskit.transform.normalize.MeanCenteringVectorNormalizer;
@@ -34,6 +37,8 @@ public class AlgorithmConfiguratorFactory {
                 return getUserItemConfiguration(neighbours, threshold, similarityType);
             case SlopeOne:
                 return getSlopeOneConfiguration(similarityType);
+            case SVD:
+                return getSVConfiguration();
             default:
                 throw new InvalidAlgorithmException(type);
         }
@@ -132,6 +137,17 @@ public class AlgorithmConfiguratorFactory {
                     throw new InvalidCorrelationException(similarityType);
             }
         }
+
+        return configuration;
+    }
+
+    private static LenskitConfiguration getSVConfiguration() {
+        LenskitConfiguration configuration = new LenskitConfiguration();
+
+        configuration.bind(ItemScorer.class).to(FunkSVDItemScorer.class);
+        configuration.bind(BaselineScorer.class, ItemScorer.class).to(ItemMeanRatingItemScorer.class);
+        configuration.set(FeatureCount.class).to(1);
+        configuration.set(IterationCount.class).to(25);
 
         return configuration;
     }

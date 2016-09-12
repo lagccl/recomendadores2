@@ -4,11 +4,13 @@ import cl.uc.psanabria.sysrec.work1.data.RatingList;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 
 public class ResultsFrame extends JFrame {
 
-    public ResultsFrame(RatingList ratingList) {
+    public ResultsFrame(RatingList ratingList, File ratingFile, String dataFolderPath) {
         initComponents();
+        tabbedPane.add("Rating", new RatingStatistics(ratingFile, dataFolderPath, this));
         tabbedPane.add("Summary", new SummaryPanel(ratingList));
         tabbedPane.add("Item-Rating", new ItemRatingPanel(ratingList));
         tabbedPane.add("User-Rating", new UserRatingPanel(ratingList));

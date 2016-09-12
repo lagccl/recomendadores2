@@ -1,0 +1,96 @@
+JFDML JFormDesigner: "5.2.4.0.321" Java: "1.8.0_112-release" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		auxiliary() {
+			"JavaCodeGenerator.defaultVariableLocal": true
+		}
+		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq l {space :::p, par l {comp separator1::::568:x, comp graphicsPanel:::::x, seq l {par l {comp label2::l:p::p, comp label4::l:p::p}, space :::p, par l {comp outputFileTextBox::::245:x, comp ratingDataFileTextField:::::x}, space :::p, par l:::p {seq {comp label3:::::p, space :::p, comp algorithmTypeComboBox:::p:140:p}, comp predictButton:::::x}}, seq {comp trainingButton:::p::p, space :::p, comp trainingProgressBar::::0:x}}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, par l:::p {comp trainingButton:::::x, comp trainingProgressBar::::0:x}, space s:::p, comp separator1:::p:2:p, space u:::p, par b {comp label2::b:p::p, comp ratingDataFileTextField::b:p::p, comp label3::b:p::p, comp algorithmTypeComboBox::b:p::p}, space :::p, par b {comp label4::b:p::p, comp outputFileTextBox::b:p::p, comp predictButton::b:p::p}, space u:::p, comp graphicsPanel::::289:x, space :::p}}"
+		} ) {
+			name: "this"
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "trainingButton"
+				"text": "Start training"
+				auxiliary() {
+					"JavaCodeGenerator.variableLocal": false
+				}
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "trainingButtonActionPerformed", false ) )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "Rating data file:"
+				"labelFor": new FormReference( "ratingDataFileTextField" )
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "ratingDataFileTextField"
+				"enabled": false
+				"editable": false
+				auxiliary() {
+					"JavaCodeGenerator.variableLocal": false
+				}
+				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "fileTextFieldMouseClicked", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label3"
+				"text": "Method to use:"
+				"labelFor": new FormReference( "algorithmTypeComboBox" )
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "algorithmTypeComboBox"
+				"enabled": false
+				auxiliary() {
+					"JavaCodeGenerator.variableLocal": false
+				}
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label4"
+				"text": "Output file:"
+				"labelFor": new FormReference( "outputFileTextBox" )
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "outputFileTextBox"
+				"enabled": false
+				"editable": false
+				auxiliary() {
+					"JavaCodeGenerator.variableLocal": false
+				}
+				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "fileTextFieldMouseClicked", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "predictButton"
+				"text": "Predict Ratings"
+				"enabled": false
+				auxiliary() {
+					"JavaCodeGenerator.variableLocal": false
+				}
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "predictButtonActionPerformed", false ) )
+			} )
+			add( new FormComponent( "javax.swing.JSeparator" ) {
+				name: "separator1"
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridLayout ) {
+				"columns": 2
+				"rows": 2
+				"hgap": 5
+				"vgap": 5
+			} ) {
+				name: "graphicsPanel"
+				auxiliary() {
+					"JavaCodeGenerator.variableLocal": false
+				}
+			} )
+			add( new FormComponent( "javax.swing.JProgressBar" ) {
+				name: "trainingProgressBar"
+				auxiliary() {
+					"JavaCodeGenerator.variableLocal": false
+				}
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 580, 435 )
+		} )
+	}
+}
