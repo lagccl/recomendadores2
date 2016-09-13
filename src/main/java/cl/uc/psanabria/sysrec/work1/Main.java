@@ -16,6 +16,7 @@ import java.io.IOException;
 public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
     public static final String TRAINING_RATING_FILE = "rating/training_rating.csv";
+    public static final String TRAINING_RANKING_FILE = "ranking/training_ranking.csv";
 
     public static void main(String[] args) throws TaskExecutionException {
         RecSysSplashScreen splashScreen = new RecSysSplashScreen();
@@ -25,6 +26,7 @@ public class Main {
 
     private static void startResultFrame(RecSysSplashScreen splashScreen, String dataFolderPath) {
         FileInputStream inputStream = null;
+        FileInputStream rankingInputStream = null;
 
         try {
             splashScreen.updateStatus("Reading Rating Training Set...");
@@ -35,10 +37,16 @@ public class Main {
             RatingList ratingList = RatingListFactory.createFrom(inputStream, true, 1, 0, 3);
 
             splashScreen.updateStatus("Generating rating data summary graphics...");
-            logger.info("Generating Item/Score Average");
-            ResultsFrame frame = new ResultsFrame(ratingList, ratingFile, dataFolderPath);
-            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
+            logger.info("Reading Ranking Training Set");
+            splashScreen.updateStatus("Generating ranking data summary graphics...");
+
+            File rankingFile = new File(dataFolderPath, TRAINING_RANKING_FILE);
+            rankingInputStream = new FileInputStream(rankingFile);
+            RatingList rankingList = RatingListFactory.createFrom(rankingInputStream, true, 1, 0, 2);
+            logger.info("Generating Item/Score Average for ranking");
+            ResultsFrame frame = new ResultsFrame(ratingList, ratingFile, rankingList, rankingFile, dataFolderPath);
+            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             splashScreen.close();
             frame.setVisible(true);
         } catch (IOException ex) {

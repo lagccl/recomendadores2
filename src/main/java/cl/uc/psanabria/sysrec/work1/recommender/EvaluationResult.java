@@ -8,7 +8,7 @@ public class EvaluationResult {
     private double x;
     private List<Long> timeList;
     private List<Double> rmseList;
-    private List<Double> nDCGList;
+    private List<Double> topMapList;
     private List<Double> topNDCGList;
 
     public EvaluationResult(String testName, double x) {
@@ -16,7 +16,7 @@ public class EvaluationResult {
         this.x = x;
         timeList = new LinkedList<>();
         rmseList = new LinkedList<>();
-        nDCGList = new LinkedList<>();
+        topMapList = new LinkedList<>();
         topNDCGList = new LinkedList<>();
     }
 
@@ -48,16 +48,16 @@ public class EvaluationResult {
         return total / rmseList.size();
     }
 
-    public double getNDCG() {
-        if (nDCGList.size() == 0)
+    public double getTopMap() {
+        if (topMapList.size() == 0)
             return 0;
         double total = 0;
 
-        for (double nDCG: nDCGList) {
-            total += nDCG;
+        for (double map: topMapList) {
+            total += map;
         }
 
-        return total / nDCGList.size();
+        return total / topMapList.size();
     }
 
     public double getTopNDCG() {
@@ -72,10 +72,10 @@ public class EvaluationResult {
         return total / topNDCGList.size();
     }
 
-    public void addResult(long elapsedTime, double rmse, double nDCG, double topNDCG) {
+    public void addResult(long elapsedTime, double rmse, double topMAP, double topNDCG) {
         timeList.add(elapsedTime);
         rmseList.add(rmse);
-        nDCGList.add(nDCG);
+        topMapList.add(topMAP);
         topNDCGList.add(topNDCG);
     }
 

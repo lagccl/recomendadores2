@@ -43,4 +43,5 @@ dependencies {
     compile 'org.grouplens.lenskit:lenskit-all:2.2.1'
     compile 'org.slf4j:slf4j-jdk14:1.7.21'
     compile 'de.erichseifert.gral:gral-core:0.11'
+    compile 'com.google.code.gson:gson:2.7'
 }

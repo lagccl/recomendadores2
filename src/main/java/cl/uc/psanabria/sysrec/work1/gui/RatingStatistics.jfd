@@ -26,7 +26,6 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JTextField" ) {
 				name: "ratingDataFileTextField"
-				"enabled": false
 				"editable": false
 				auxiliary() {
 					"JavaCodeGenerator.variableLocal": false
@@ -40,7 +39,6 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JComboBox" ) {
 				name: "algorithmTypeComboBox"
-				"enabled": false
 				auxiliary() {
 					"JavaCodeGenerator.variableLocal": false
 				}
@@ -52,7 +50,6 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JTextField" ) {
 				name: "outputFileTextBox"
-				"enabled": false
 				"editable": false
 				auxiliary() {
 					"JavaCodeGenerator.variableLocal": false
@@ -62,7 +59,6 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "predictButton"
 				"text": "Predict Ratings"
-				"enabled": false
 				auxiliary() {
 					"JavaCodeGenerator.variableLocal": false
 				}

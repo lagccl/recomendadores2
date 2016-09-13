@@ -3,6 +3,8 @@ package cl.uc.psanabria.sysrec.work1.recommender;
 import org.grouplens.lenskit.ItemScorer;
 import org.grouplens.lenskit.baseline.BaselineScorer;
 import org.grouplens.lenskit.baseline.ItemMeanRatingItemScorer;
+import org.grouplens.lenskit.baseline.UserMeanBaseline;
+import org.grouplens.lenskit.baseline.UserMeanItemScorer;
 import org.grouplens.lenskit.core.LenskitConfiguration;
 import org.grouplens.lenskit.iterative.IterationCount;
 import org.grouplens.lenskit.knn.NeighborhoodSize;
@@ -39,6 +41,8 @@ public class AlgorithmConfiguratorFactory {
                 return getSlopeOneConfiguration(similarityType);
             case SVD:
                 return getSVConfiguration();
+            case Custom:
+                return getCustomConfiguration();
             default:
                 throw new InvalidAlgorithmException(type);
         }
@@ -146,8 +150,8 @@ public class AlgorithmConfiguratorFactory {
 
         configuration.bind(ItemScorer.class).to(FunkSVDItemScorer.class);
         configuration.bind(BaselineScorer.class, ItemScorer.class).to(ItemMeanRatingItemScorer.class);
-        configuration.set(FeatureCount.class).to(1);
-        configuration.set(IterationCount.class).to(25);
+        configuration.set(FeatureCount.class).to(25);
+        configuration.set(IterationCount.class).to(110);
 
         return configuration;
     }
@@ -161,6 +165,24 @@ public class AlgorithmConfiguratorFactory {
             configuration.bind(ItemScorer.class).to(WeightedSlopeOneItemScorer.class);
 
         configuration.bind(BaselineScorer.class, ItemScorer.class).to(ItemMeanRatingItemScorer.class);
+
+        return configuration;
+    }
+
+    private static LenskitConfiguration getCustomConfiguration() {
+        LenskitConfiguration configuration = new LenskitConfiguration();
+
+        configuration.bind(ItemScorer.class).to(ItemItemScorer.class);
+        configuration.bind(BaselineScorer.class, ItemScorer.class).to(FunkSVDItemScorer.class);
+        configuration.within(BaselineScorer.class, ItemScorer.class).bind(BaselineScorer.class, ItemScorer.class).to(UserMeanItemScorer.class);
+        configuration.within(BaselineScorer.class, ItemScorer.class).bind(UserMeanBaseline.class, ItemScorer.class).to(ItemMeanRatingItemScorer.class);
+        configuration.within(BaselineScorer.class, ItemScorer.class).set(FeatureCount.class).to(25);
+        configuration.within(BaselineScorer.class, ItemScorer.class).set(IterationCount.class).to(110);
+
+        configuration.within(UserVectorNormalizer.class)
+                .bind(VectorNormalizer.class).to(MeanCenteringVectorNormalizer.class);
+
+        configuration.set(ThresholdValue.class).to(0.5);
 
         return configuration;
     }

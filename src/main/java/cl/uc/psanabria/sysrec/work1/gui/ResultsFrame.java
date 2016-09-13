@@ -8,12 +8,16 @@ import java.io.File;
 
 public class ResultsFrame extends JFrame {
 
-    public ResultsFrame(RatingList ratingList, File ratingFile, String dataFolderPath) {
+    public ResultsFrame(RatingList ratingList, File ratingFile, RatingList rankingList, File rankingFile, String dataFolderPath) {
         initComponents();
-        tabbedPane.add("Rating", new RatingStatistics(ratingFile, dataFolderPath, this));
         tabbedPane.add("Summary", new SummaryPanel(ratingList));
+        tabbedPane.add("Summary-Ranking", new SummaryPanel(rankingList));
         tabbedPane.add("Item-Rating", new ItemRatingPanel(ratingList));
         tabbedPane.add("User-Rating", new UserRatingPanel(ratingList));
+        tabbedPane.add("Item-Ranking", new ItemRatingPanel(rankingList));
+        tabbedPane.add("User-Ranking", new UserRatingPanel(rankingList));
+        tabbedPane.add("Rating", new RatingStatistics(ratingFile, dataFolderPath, false, this));
+        tabbedPane.add("Ranking", new RatingStatistics(rankingFile, dataFolderPath, true, this));
         add(tabbedPane);
     }
 

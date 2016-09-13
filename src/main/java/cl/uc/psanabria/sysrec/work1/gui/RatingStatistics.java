@@ -51,19 +51,23 @@ class RatingStatistics extends JPanel {
     private JFrame parentFrame;
     private File inputFile, outputFile;
     private String dataFolderPath;
+    private boolean isRanking;
 
     @SuppressWarnings("unchecked")
-    RatingStatistics(File ratingFile, String dataFolderPath, JFrame parentFrame) {
+    RatingStatistics(File ratingFile, String dataFolderPath, boolean isRanking, JFrame parentFrame) {
         initComponents();
         this.ratingFile = ratingFile;
         this.parentFrame = parentFrame;
         this.dataFolderPath = dataFolderPath;
+        this.isRanking = isRanking;
         algorithms = generateAlgorithms();
         for (String algorithm : algorithms.keySet()) {
             algorithmTypeComboBox.addItem(algorithm);
         }
         inputFile = null;
         outputFile = null;
+        if (isRanking)
+            predictButton.setText("Generate TopN");
     }
 
     private void trainingButtonActionPerformed() {
@@ -155,7 +159,6 @@ class RatingStatistics extends JPanel {
         label2.setLabelFor(ratingDataFileTextField);
 
         //---- ratingDataFileTextField ----
-        ratingDataFileTextField.setEnabled(false);
         ratingDataFileTextField.setEditable(false);
         ratingDataFileTextField.addMouseListener(new MouseAdapter() {
             @Override
@@ -168,15 +171,11 @@ class RatingStatistics extends JPanel {
         label3.setText("Method to use:");
         label3.setLabelFor(algorithmTypeComboBox);
 
-        //---- algorithmTypeComboBox ----
-        algorithmTypeComboBox.setEnabled(false);
-
         //---- label4 ----
         label4.setText("Output file:");
         label4.setLabelFor(outputFileTextBox);
 
         //---- outputFileTextBox ----
-        outputFileTextBox.setEnabled(false);
         outputFileTextBox.setEditable(false);
         outputFileTextBox.addMouseListener(new MouseAdapter() {
             @Override
@@ -187,7 +186,6 @@ class RatingStatistics extends JPanel {
 
         //---- predictButton ----
         predictButton.setText("Predict Ratings");
-        predictButton.setEnabled(false);
         predictButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -203,56 +201,56 @@ class RatingStatistics extends JPanel {
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup()
+            layout.createParallelGroup()
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(layout.createParallelGroup()
+                        .addComponent(separator1, GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE)
+                        .addComponent(graphicsPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(layout.createParallelGroup()
-                                        .addComponent(separator1, GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE)
-                                        .addComponent(graphicsPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addGroup(layout.createParallelGroup()
-                                                        .addComponent(label2)
-                                                        .addComponent(label4))
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(layout.createParallelGroup()
-                                                        .addComponent(outputFileTextBox, GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
-                                                        .addComponent(ratingDataFileTextField))
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                                        .addGroup(layout.createSequentialGroup()
-                                                                .addComponent(label3)
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(algorithmTypeComboBox, GroupLayout.PREFERRED_SIZE, 140, GroupLayout.PREFERRED_SIZE))
-                                                        .addComponent(predictButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addComponent(trainingButton)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(trainingProgressBar, GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)))
-                                .addContainerGap())
+                            .addGroup(layout.createParallelGroup()
+                                .addComponent(label2)
+                                .addComponent(label4))
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(layout.createParallelGroup()
+                                .addComponent(outputFileTextBox, GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
+                                .addComponent(ratingDataFileTextField))
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(label3)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(algorithmTypeComboBox, GroupLayout.PREFERRED_SIZE, 140, GroupLayout.PREFERRED_SIZE))
+                                .addComponent(predictButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(trainingButton)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(trainingProgressBar, GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)))
+                    .addContainerGap())
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup()
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(trainingButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(trainingProgressBar, GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))
-                                .addGap(18, 18, 18)
-                                .addComponent(separator1, GroupLayout.PREFERRED_SIZE, 2, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(label2)
-                                        .addComponent(ratingDataFileTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(label3)
-                                        .addComponent(algorithmTypeComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(label4)
-                                        .addComponent(outputFileTextBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(predictButton))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(graphicsPanel, GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
-                                .addContainerGap())
+            layout.createParallelGroup()
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                        .addComponent(trainingButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(trainingProgressBar, GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))
+                    .addGap(18, 18, 18)
+                    .addComponent(separator1, GroupLayout.PREFERRED_SIZE, 2, GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(label2)
+                        .addComponent(ratingDataFileTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(label3)
+                        .addComponent(algorithmTypeComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(label4)
+                        .addComponent(outputFileTextBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(predictButton))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(graphicsPanel, GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
+                    .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
@@ -271,14 +269,14 @@ class RatingStatistics extends JPanel {
     @SuppressWarnings("unchecked")
     private void generateResultGraphics(List<EvaluationResult> resultList) {
         DataTable dataRMSE = new DataTable(String.class, Double.class, Double.class);
-        DataTable dataNDCG = new DataTable(String.class, Double.class, Double.class);
+        DataTable dataTopMAP = new DataTable(String.class, Double.class, Double.class);
         DataTable dataTopNDCG = new DataTable(String.class, Double.class, Double.class);
         DataTable dataTime = new DataTable(String.class, Double.class, Double.class);
-        Set<String> dataSetsNames = new HashSet<>();
+        Set<String> dataSetsNames = new TreeSet<>();
 
         for (EvaluationResult result : resultList) {
             dataRMSE.add(result.getTestName(), result.getX(), result.getRMSE());
-            dataNDCG.add(result.getTestName(), result.getX(), result.getNDCG());
+            dataTopMAP.add(result.getTestName(), result.getX(), result.getTopMap());
             dataTopNDCG.add(result.getTestName(), result.getX(), result.getTopNDCG());
             dataTime.add(result.getTestName(), result.getX(), result.getTime());
             dataSetsNames.add(result.getTestName());
@@ -286,7 +284,7 @@ class RatingStatistics extends JPanel {
 
         graphicsPanel.removeAll();
         graphicsPanel.add(new InteractivePanel(generatePlot(dataSetsNames, dataRMSE, "RMSE", "RMSE")));
-        graphicsPanel.add(new InteractivePanel(generatePlot(dataSetsNames, dataNDCG, "nDCG", "nDCG")));
+        graphicsPanel.add(new InteractivePanel(generatePlot(dataSetsNames, dataTopMAP, "Top MAP", "TopMAP")));
         graphicsPanel.add(new InteractivePanel(generatePlot(dataSetsNames, dataTopNDCG, "Top nDCG", "TopNDCG")));
         graphicsPanel.add(new InteractivePanel(generatePlot(dataSetsNames, dataTime, "Total time", "Elapsed time")));
         graphicsPanel.revalidate();
@@ -336,10 +334,10 @@ class RatingStatistics extends JPanel {
     }
 
     private Map<String, LenskitConfiguration> generateAlgorithms() {
-        Map<String, LenskitConfiguration> result = new HashMap<>();
+        Map<String, LenskitConfiguration> result = new TreeMap<>();
 
-        /*result.put("UserKNN", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User));
-        result.put("UserKNN-5 Neighbours", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User, 5));
+        result.put("UserKNN", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User));
+        /*result.put("UserKNN-5 Neighbours", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User, 5));
         result.put("UserKNN-10 Neighbours", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User, 10));
         result.put("UserKNN-15 Neighbours", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User, 15));
         result.put("UserKNN-0.9 Similarity", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User, 0.9));
@@ -349,25 +347,13 @@ class RatingStatistics extends JPanel {
         result.put("UserKNN-0.5 TSim", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User, 0.5));
         result.put("UserKNN-Cosine", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User, SimilarityType.Cosine));
         result.put("UserKNN-Pearson", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User, SimilarityType.Pearson));
-        result.put("UserKNN-Spearman", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User, SimilarityType.Spearman));
+        result.put("UserKNN-Spearman", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User, SimilarityType.Spearman));*/
 
         result.put("ItemKNN", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item));
-        result.put("ItemKNN-5", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item, 5));
-        result.put("ItemKNN-10", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item, 10));
-        result.put("ItemKNN-15", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item, 15));
-        result.put("ItemKNN-0.9 TSim", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item, 0.9));
-        result.put("ItemKNN-0.8 TSim", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item, 0.8));
-        result.put("ItemKNN-0.7 TSim", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item, 0.7));
-        result.put("ItemKNN-0.6 TSim", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item, 0.6));
-        result.put("ItemKNN-0.5 TSim", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item, 0.5));
-        result.put("ItemKNN-Cosine", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item, SimilarityType.Cosine));
-        result.put("ItemKNN-Pearson", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item, SimilarityType.Pearson));
-        result.put("ItemKNN-Spearman", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item, SimilarityType.Spearman));
-
         result.put("Slope One", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.SlopeOne));
-        result.put("Slope One-Weighted Slope", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.SlopeOne, SimilarityType.WeightedSlope));*/
-
+        result.put("Slope One-Weighted Slope", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.SlopeOne, SimilarityType.WeightedSlope));
         result.put("FunkSVD", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.SVD));
+        result.put("Mixed Scorer", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Custom));
 
         return result;
     }
@@ -381,7 +367,7 @@ class RatingStatistics extends JPanel {
 
             for (String name : algorithms.keySet()) {
                 logger.info("Evaluating " + name);
-                Evaluator evaluator = new Evaluator(ratingFile, name, algorithms.get(name));
+                Evaluator evaluator = new Evaluator(ratingFile, name, algorithms.get(name), isRanking);
 
                 resultList.addAll(evaluator.runEvaluation());
                 logger.info("Finished evaluating " + name);
@@ -421,11 +407,14 @@ class RatingStatistics extends JPanel {
                 DelimitedColumnEventFormat format = Formats.csvRatings();
 
                 format.setHeaderLines(1);
-                format.setFields(Fields.user(), Fields.item(), Fields.ignored(), Fields.rating());
+                if (isRanking)
+                    format.setFields(Fields.user(), Fields.item(), Fields.rating());
+                else
+                    format.setFields(Fields.user(), Fields.item(), Fields.ignored(), Fields.rating());
                 configuration.bind(EventDAO.class).to(new TextEventDAO(ratingFile, format));
 
                 RecommendationPredictionsGenerator generator = new RecommendationPredictionsGenerator(configuration, inputFile, outputFile);
-                generator.recommend();
+                generator.predict(isRanking);
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
             }
@@ -439,7 +428,10 @@ class RatingStatistics extends JPanel {
             algorithmTypeComboBox.setEnabled(true);
             outputFileTextBox.setEnabled(true);
             predictButton.setEnabled(true);
-            predictButton.setText("Predict Ratings");
+            if (isRanking)
+                predictButton.setText("Generate TopN");
+            else
+                predictButton.setText("Predict Ratings");
             JOptionPane.showMessageDialog(RatingStatistics.this, "Prediction finished", "Information", JOptionPane.INFORMATION_MESSAGE);
         }
     }

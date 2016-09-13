@@ -4,5 +4,6 @@ public enum ConfigurationType {
     User,
     Item,
     SlopeOne,
-    SVD
+    SVD,
+    Custom
 }
