@@ -8,7 +8,7 @@ mainClassName = "cl.uc.psanabria.sysrec.work1.Main"
 applicationDefaultJvmArgs = ['-splash:images/splash.gif',
                             '-DdataPath=data',
                              '-Dswing.defaultlaf=javax.swing.plaf.nimbus.NimbusLookAndFeel',
-                             '-Xmx8g']
+                             '-Xmx12g']
 
 repositories {
     mavenCentral()

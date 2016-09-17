@@ -15,8 +15,8 @@ import java.io.IOException;
 
 public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
-    public static final String TRAINING_RATING_FILE = "rating/training_rating.csv";
-    public static final String TRAINING_RANKING_FILE = "ranking/training_ranking.csv";
+    private static final String TRAINING_RATING_FILE = "rating/training_rating.csv";
+    private static final String TRAINING_RANKING_FILE = "ranking/training_ranking.csv";
 
     public static void main(String[] args) throws TaskExecutionException {
         RecSysSplashScreen splashScreen = new RecSysSplashScreen();

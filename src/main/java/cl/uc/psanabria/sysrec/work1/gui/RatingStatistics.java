@@ -336,24 +336,30 @@ class RatingStatistics extends JPanel {
     private Map<String, LenskitConfiguration> generateAlgorithms() {
         Map<String, LenskitConfiguration> result = new TreeMap<>();
 
-        result.put("UserKNN", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User));
-        /*result.put("UserKNN-5 Neighbours", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User, 5));
-        result.put("UserKNN-10 Neighbours", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User, 10));
-        result.put("UserKNN-15 Neighbours", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User, 15));
-        result.put("UserKNN-0.9 Similarity", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User, 0.9));
-        result.put("UserKNN-0.8 TSim", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User, 0.8));
-        result.put("UserKNN-0.7 TSim", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User, 0.7));
-        result.put("UserKNN-0.6 TSim", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User, 0.6));
-        result.put("UserKNN-0.5 TSim", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User, 0.5));
-        result.put("UserKNN-Cosine", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User, SimilarityType.Cosine));
-        result.put("UserKNN-Pearson", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User, SimilarityType.Pearson));
-        result.put("UserKNN-Spearman", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User, SimilarityType.Spearman));*/
+        if (isRanking) {
+            for (int i = 10; i <= 50; i+=5) {
+                result.put("FunkSVD " + i, AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.SVD, i));
+            }
+            result.put("UserKNN", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User));
+            result.put("ItemKNN", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item));
+            result.put("Slope One", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.SlopeOne));
+            result.put("Slope One-Weighted Slope", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.SlopeOne, SimilarityType.WeightedSlope));
+        } else {
+            result.put("UserKNN", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User));
+            result.put("UserKNN-Pearson", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User, SimilarityType.Pearson));
+            result.put("UserKNN-Spearman", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User, SimilarityType.Spearman));
 
-        result.put("ItemKNN", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item));
-        result.put("Slope One", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.SlopeOne));
-        result.put("Slope One-Weighted Slope", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.SlopeOne, SimilarityType.WeightedSlope));
-        result.put("FunkSVD", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.SVD));
-        result.put("Mixed Scorer", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Custom));
+            result.put("ItemKNN", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item));
+            result.put("ItemKNN-Pearson", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item, SimilarityType.Pearson));
+            result.put("ItemKNN-Spearman", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item, SimilarityType.Spearman));
+
+            result.put("Slope One", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.SlopeOne));
+            result.put("Slope One-Weighted Slope", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.SlopeOne, SimilarityType.WeightedSlope));
+
+            for (int i = 10; i <= 50; i+=5) {
+                result.put("FunkSVD " + i, AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.SVD, i));
+            }
+        }
 
         return result;
     }

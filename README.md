@@ -5,7 +5,7 @@ Requirements:
 In order to compile this software you need this apps previously installed:
 * Oracle Java JDK 1.7 (Java 7)
 * Gradle >= 2.0
-* At least a minimum RAM of 4GB
+* At least a minimum RAM of 8GB
 
 Build:
 ------
@@ -31,4 +31,8 @@ This software uses the next Recomendation Algorithms:
 * SVD Matrix Factorization
 
 This software has custom Data Analysers (for means), and have some Unit Testing for custom components. Gradle runs the
-tests in the building process, the results can be checked in `build\reports\tests\test\index.html`
+tests in the building process, the results can be checked in `build/reports/tests/test/index.html`
+
+Documentation
+-------------
+The documentation can be found in `documentation/report.docx` and a pdf version in the root of the folder

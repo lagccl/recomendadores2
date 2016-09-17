@@ -7,6 +7,7 @@ import org.grouplens.lenskit.baseline.UserMeanBaseline;
 import org.grouplens.lenskit.baseline.UserMeanItemScorer;
 import org.grouplens.lenskit.core.LenskitConfiguration;
 import org.grouplens.lenskit.iterative.IterationCount;
+import org.grouplens.lenskit.iterative.LearningRate;
 import org.grouplens.lenskit.knn.NeighborhoodSize;
 import org.grouplens.lenskit.knn.item.ItemItemScorer;
 import org.grouplens.lenskit.knn.item.ItemVectorSimilarity;
@@ -40,7 +41,7 @@ public class AlgorithmConfiguratorFactory {
             case SlopeOne:
                 return getSlopeOneConfiguration(similarityType);
             case SVD:
-                return getSVConfiguration();
+                return getSVConfiguration(neighbours);
             case Custom:
                 return getCustomConfiguration();
             default:
@@ -65,7 +66,7 @@ public class AlgorithmConfiguratorFactory {
     }
 
     public static LenskitConfiguration getConfiguration(ConfigurationType type) {
-        return getConfiguration(type, 0);
+        return getConfiguration(type, 1);
     }
 
     private static LenskitConfiguration getUserUserConfiguration(int neighbours, double threshold, SimilarityType similarityType) {
@@ -145,13 +146,14 @@ public class AlgorithmConfiguratorFactory {
         return configuration;
     }
 
-    private static LenskitConfiguration getSVConfiguration() {
+    private static LenskitConfiguration getSVConfiguration(int features) {
         LenskitConfiguration configuration = new LenskitConfiguration();
 
         configuration.bind(ItemScorer.class).to(FunkSVDItemScorer.class);
-        configuration.bind(BaselineScorer.class, ItemScorer.class).to(ItemMeanRatingItemScorer.class);
-        configuration.set(FeatureCount.class).to(25);
-        configuration.set(IterationCount.class).to(110);
+        configuration.bind(BaselineScorer.class, ItemScorer.class).to(UserMeanItemScorer.class);
+        configuration.bind(UserMeanBaseline.class, ItemScorer.class).to(ItemMeanRatingItemScorer.class);
+        configuration.set(FeatureCount.class).to(features);
+        configuration.set(IterationCount.class).to(200);
 
         return configuration;
     }
@@ -172,17 +174,10 @@ public class AlgorithmConfiguratorFactory {
     private static LenskitConfiguration getCustomConfiguration() {
         LenskitConfiguration configuration = new LenskitConfiguration();
 
-        configuration.bind(ItemScorer.class).to(ItemItemScorer.class);
-        configuration.bind(BaselineScorer.class, ItemScorer.class).to(FunkSVDItemScorer.class);
-        configuration.within(BaselineScorer.class, ItemScorer.class).bind(BaselineScorer.class, ItemScorer.class).to(UserMeanItemScorer.class);
-        configuration.within(BaselineScorer.class, ItemScorer.class).bind(UserMeanBaseline.class, ItemScorer.class).to(ItemMeanRatingItemScorer.class);
-        configuration.within(BaselineScorer.class, ItemScorer.class).set(FeatureCount.class).to(25);
-        configuration.within(BaselineScorer.class, ItemScorer.class).set(IterationCount.class).to(110);
-
-        configuration.within(UserVectorNormalizer.class)
-                .bind(VectorNormalizer.class).to(MeanCenteringVectorNormalizer.class);
-
-        configuration.set(ThresholdValue.class).to(0.5);
+        configuration.bind(ItemScorer.class).to(FunkSVDItemScorer.class);
+        configuration.bind(BaselineScorer.class, ItemScorer.class).to(ItemMeanRatingItemScorer.class);
+        configuration.set(FeatureCount.class).to(39);
+        configuration.set(IterationCount.class).to(150);
 
         return configuration;
     }
