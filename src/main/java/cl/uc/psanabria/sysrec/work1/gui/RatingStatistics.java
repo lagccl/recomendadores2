@@ -344,6 +344,7 @@ class RatingStatistics extends JPanel {
             result.put("ItemKNN", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Item));
             result.put("Slope One", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.SlopeOne));
             result.put("Slope One-Weighted Slope", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.SlopeOne, SimilarityType.WeightedSlope));
+            result.put("Codalab algorithm", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.Custom));
         } else {
             result.put("UserKNN", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User));
             result.put("UserKNN-Pearson", AlgorithmConfiguratorFactory.getConfiguration(ConfigurationType.User, SimilarityType.Pearson));

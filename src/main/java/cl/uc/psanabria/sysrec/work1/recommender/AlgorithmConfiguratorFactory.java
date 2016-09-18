@@ -6,8 +6,7 @@ import org.grouplens.lenskit.baseline.ItemMeanRatingItemScorer;
 import org.grouplens.lenskit.baseline.UserMeanBaseline;
 import org.grouplens.lenskit.baseline.UserMeanItemScorer;
 import org.grouplens.lenskit.core.LenskitConfiguration;
-import org.grouplens.lenskit.iterative.IterationCount;
-import org.grouplens.lenskit.iterative.LearningRate;
+import org.grouplens.lenskit.iterative.*;
 import org.grouplens.lenskit.knn.NeighborhoodSize;
 import org.grouplens.lenskit.knn.item.ItemItemScorer;
 import org.grouplens.lenskit.knn.item.ItemVectorSimilarity;
@@ -19,6 +18,8 @@ import org.grouplens.lenskit.knn.user.UserUserItemScorer;
 import org.grouplens.lenskit.knn.user.UserVectorSimilarity;
 import org.grouplens.lenskit.mf.funksvd.FeatureCount;
 import org.grouplens.lenskit.mf.funksvd.FunkSVDItemScorer;
+import org.grouplens.lenskit.mf.funksvd.FunkSVDUpdateRule;
+import org.grouplens.lenskit.mf.funksvd.RuntimeUpdate;
 import org.grouplens.lenskit.slopeone.SlopeOneItemScorer;
 import org.grouplens.lenskit.slopeone.WeightedSlopeOneItemScorer;
 import org.grouplens.lenskit.transform.normalize.MeanCenteringVectorNormalizer;
@@ -150,10 +151,9 @@ public class AlgorithmConfiguratorFactory {
         LenskitConfiguration configuration = new LenskitConfiguration();
 
         configuration.bind(ItemScorer.class).to(FunkSVDItemScorer.class);
-        configuration.bind(BaselineScorer.class, ItemScorer.class).to(UserMeanItemScorer.class);
-        configuration.bind(UserMeanBaseline.class, ItemScorer.class).to(ItemMeanRatingItemScorer.class);
+        configuration.bind(BaselineScorer.class, ItemScorer.class).to(ItemMeanRatingItemScorer.class);
         configuration.set(FeatureCount.class).to(features);
-        configuration.set(IterationCount.class).to(200);
+        configuration.set(IterationCount.class).to(110);
 
         return configuration;
     }
@@ -176,8 +176,13 @@ public class AlgorithmConfiguratorFactory {
 
         configuration.bind(ItemScorer.class).to(FunkSVDItemScorer.class);
         configuration.bind(BaselineScorer.class, ItemScorer.class).to(ItemMeanRatingItemScorer.class);
-        configuration.set(FeatureCount.class).to(39);
-        configuration.set(IterationCount.class).to(150);
+        configuration.bind(StoppingCondition.class).to(ThresholdStoppingCondition.class);
+        configuration.bind(RuntimeUpdate.class, FunkSVDUpdateRule.class).to(FunkSVDUpdateRule.class);
+        configuration.set(FeatureCount.class).to(9);
+        configuration.set(RegularizationTerm.class).to(0.0);
+        configuration.set(StoppingThreshold.class).to(0.0001);
+        configuration.set(MinimumIterations.class).to(200);
+        configuration.within(RuntimeUpdate.class, FunkSVDUpdateRule.class).bind(StoppingCondition.class).to(ThresholdStoppingCondition.class);
 
         return configuration;
     }
